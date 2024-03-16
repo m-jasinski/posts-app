@@ -1,2 +1,15 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import PostsInput from '../components/PostsInput.svelte';
+	import Posts from '../containers/Posts.svelte';
+
+	let howManyPostsProp = 3;
+</script>
+
+<div class="bg-gray-200">
+	<div class="container mx-auto px-4 md:px-0">
+		<PostsInput bind:howManyPosts={howManyPostsProp} />
+	</div>
+</div>
+<div class="container mx-auto px-4 md:px-0">
+	<Posts bind:howManyPosts={howManyPostsProp} />
+</div>
