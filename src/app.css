@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 body {
-    font-family: Montserrat, Arial, Helvetica, sans-serif;
+	font-family: Montserrat, Arial, Helvetica, sans-serif;
 }
 
 a {
-    @apply text-primary;
+	@apply text-primary;
 }
 
 a:hover {
-    @apply underline
+	@apply underline;
 }

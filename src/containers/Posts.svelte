@@ -50,7 +50,7 @@
 		on:click={() => fetchComents()}>Fetch Comments</button
 	>
 	<h1 class="text-2xl mb-6">Posts:</h1>
-	<ul>
+	<ul class="posts-list">
 		{#each posts as post (post.ID)}
 			<li class="post mb-8 pb-8 border-gray-100 border-b-2"><Post {post} /></li>
 		{/each}
