@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PostDTO } from '../api/dto/Posts.dto';
+	import type { PostDTO } from '../../api/dto/Posts.dto';
 
 	export let post: PostDTO;
 </script>

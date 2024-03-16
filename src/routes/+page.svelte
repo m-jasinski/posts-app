@@ -1,6 +1,6 @@
 <script lang="ts">
-	import PostsInput from '../components/PostsInput.svelte';
-	import Posts from '../containers/Posts.svelte';
+	import PostsInput from '../components/postInput/PostsInput.svelte';
+	import Posts from '../containers/posts/Posts.svelte';
 
 	let howManyPostsProp = 3;
 </script>

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import Post from '../components/Post.svelte';
-	import type { PostDTO } from '../api/dto/Posts.dto';
-	import { fetchComment, fetchPosts } from '../api/posts.service';
+	import Post from '../../components/post/Post.svelte';
+	import type { PostDTO } from '../../api/dto/Posts.dto';
+	import { fetchComment, fetchPosts } from '../../api/posts.service';
 
 	export let howManyPosts: number;
 
