@@ -48,7 +48,6 @@
 			bind:this={inputElement}
 			id="post-length"
 			type="number"
-			bind:value={inputValue}
 			min="1"
 			max="20"
 			class="border-primary border-2 w-auto max-w-fit pl-2 ml-5"
