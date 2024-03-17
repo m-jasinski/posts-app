@@ -8,12 +8,14 @@
 	let subscription: Subscription | null;
 	let inputElement: HTMLInputElement;
 
-	function validateInput(value: string): string {
-		if (+value > 20) {
-			return '20';
-		}
-		if (+value < 1) {
+	function validateInput(value: string | null): string {
+		if (!value || +value < 1) {
+			inputElement.value = '0';
 			return '0';
+		}
+		if (+value > 20) {
+			inputElement.value = '20';
+			return '20';
 		}
 		return '' + value;
 	}
