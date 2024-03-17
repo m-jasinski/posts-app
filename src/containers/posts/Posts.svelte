@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
 	import Post from '../../components/post/Post.svelte';
 	import type { PostDTO } from '../../api/dto/Posts.dto';
 	import { fetchComment, fetchPosts } from '../../api/posts.service';
@@ -7,15 +6,10 @@
 	export let howManyPosts: number;
 
 	let posts: PostDTO[] = [];
-	let commentsMap = new Map();
 	let isFetchBtnEnabled = true;
 	let howManyComments = 1;
 
-	onDestroy(() => {
-		commentsMap = new Map();
-	});
-
-	async function fetchData(length: number) {
+	async function fetchData(length: number): Promise<void> {
 		if (length === 0) {
 			posts = [];
 			return;
@@ -25,12 +19,11 @@
 		isFetchBtnEnabled = true;
 	}
 
-	async function fetchComents() {
+	async function fetchComents(): Promise<void> {
 		isFetchBtnEnabled = false;
 		for (let post of posts) {
 			if (post.discussion.comment_count > 0) {
 				const comments = await fetchComment(post.ID, howManyComments);
-				console.log('Comments: ', comments);
 				post.comments = comments;
 				post = { ...post };
 				posts = [...posts];

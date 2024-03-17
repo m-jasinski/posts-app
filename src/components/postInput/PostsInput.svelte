@@ -29,7 +29,6 @@
 		);
 
 		subscription = input$.subscribe((value) => {
-			console.log(value);
 			howManyPosts = +value;
 			inputValue = '' + Number(value);
 		});
