@@ -3,12 +3,14 @@
 	import type { PostDTO } from '../../api/dto/Posts.dto';
 	import { fetchComment, fetchPosts } from '../../api/posts.service';
 	import { ImagePlaceholder } from 'flowbite-svelte';
+	import { onMount } from 'svelte';
 
 	export let howManyPosts: number;
 
 	let posts: PostDTO[] = [];
 	let isFetchBtnEnabled = true;
 	let howManyComments = 1;
+	let initialFlag = false;
 
 	async function fetchData(length: number): Promise<void> {
 		if (length === 0) {
@@ -23,18 +25,24 @@
 	async function fetchComents(): Promise<void> {
 		isFetchBtnEnabled = false;
 		for (let post of posts) {
-			if (post.discussion.comment_count > 0) {
-				const comments = await fetchComment(post.ID, howManyComments);
-				post.comments = comments || [];
-				post = { ...post };
-				posts = [...posts];
-			}
+			const comments = await fetchComment(post.ID, howManyComments);
+			post.comments = comments || [];
+			post = { ...post };
+			posts = [...posts];
 		}
 	}
 
 	$: {
-		fetchData(howManyPosts);
+		if (!initialFlag) {
+			initialFlag = true;
+		} else {
+			fetchData(howManyPosts);
+		}
 	}
+
+	onMount(() => {
+		fetchData(howManyPosts);
+	});
 </script>
 
 {#if posts.length > 0}
