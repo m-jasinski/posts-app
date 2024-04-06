@@ -25,10 +25,16 @@
 	async function fetchComents(): Promise<void> {
 		isFetchBtnEnabled = false;
 		for (let post of posts) {
-			const comments = await fetchComment(post.ID, howManyComments);
-			post.comments = comments || [];
-			post = { ...post };
-			posts = [...posts];
+			if (post.discussion.comment_count > 0) {
+				const comments = await fetchComment(post.ID, howManyComments);
+				post.comments = comments || [];
+				post = { ...post };
+				posts = [...posts];
+			} else {
+				post.comments = [];
+				post = { ...post };
+				posts = [...posts];
+			}
 		}
 	}
 
