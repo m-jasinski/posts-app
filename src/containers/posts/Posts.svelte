@@ -39,7 +39,7 @@
 
 {#if posts.length > 0}
 	<button
-		class="bg-primary text-white hover:bg-slate-800 my-5 px-3 py-2 mx-auto"
+		class="bg-accent text-white hover:bg-slate-800 my-5 px-3 py-2 mx-auto"
 		disabled={!isFetchBtnEnabled}
 		on:click={() => fetchComents()}>Fetch Comments</button
 	>
