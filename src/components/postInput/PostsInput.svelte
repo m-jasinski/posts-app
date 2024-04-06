@@ -1,59 +1,15 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
-	import { Subscription, fromEvent, of } from 'rxjs';
-	import { catchError, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+	import { Label, Range } from 'flowbite-svelte';
 
 	export let howManyPosts: number;
-	let inputValue: string;
-	let subscription: Subscription | null;
-	let inputElement: HTMLInputElement;
-
-	function validateInput(value: string | null): string {
-		if (!value || +value < 1) {
-			inputElement.value = '0';
-			return '0';
-		}
-		if (+value > 20) {
-			inputElement.value = '20';
-			return '20';
-		}
-		return '' + value;
-	}
-
-	onMount(() => {
-		inputValue = '' + howManyPosts;
-
-		const input$ = fromEvent(inputElement, 'input').pipe(
-			map((event) => validateInput((event.target as HTMLInputElement).value)),
-			distinctUntilChanged(),
-			debounceTime(500),
-			catchError((err) => of(1))
-		);
-
-		subscription = input$.subscribe((value) => {
-			howManyPosts = +value;
-			inputValue = '' + Number(value);
-		});
-	});
-
-	onDestroy(() => {
-		if (subscription) {
-			subscription.unsubscribe();
-		}
-	});
+	const minVal = 1;
+	const maxVal = 20;
 </script>
 
-<form on:submit={(event) => event.preventDefault()} class="py-5">
-	<fieldset class="flex flex-row">
-		<label for="post-length">Set number of posts to render (1-20):</label>
-		<input
-			bind:this={inputElement}
-			id="post-length"
-			type="number"
-			bind:value={inputValue}
-			min="1"
-			max="20"
-			class="border-primary border-2 w-auto max-w-fit pl-2 ml-5"
-		/>
+<form on:submit={(event) => event.preventDefault()} class="py-5 text-white">
+	<fieldset>
+		<Label for="post-length" class="text-white">Set number of posts to render (1-20)</Label>
+		<Range id="post-length" min={minVal} max={maxVal} bind:value={howManyPosts} class="bg-white" />
+		<p>{howManyPosts} {howManyPosts > 1 ? 'posts' : 'post'}</p>
 	</fieldset>
 </form>

@@ -2,6 +2,7 @@
 	import Post from '../../components/post/Post.svelte';
 	import type { PostDTO } from '../../api/dto/Posts.dto';
 	import { fetchComment, fetchPosts } from '../../api/posts.service';
+	import { ImagePlaceholder } from 'flowbite-svelte';
 
 	export let howManyPosts: number;
 
@@ -38,7 +39,7 @@
 
 {#if posts.length > 0}
 	<button
-		class="bg-primary hover:bg-slate-800 text-white my-5 px-3 py-2 mx-auto"
+		class="bg-primary text-white hover:bg-slate-800 my-5 px-3 py-2 mx-auto"
 		disabled={!isFetchBtnEnabled}
 		on:click={() => fetchComents()}>Fetch Comments</button
 	>
@@ -49,9 +50,9 @@
 		{/each}
 	</ul>
 {:else if posts.length === 0}
-	<div class="flex flex-row">
-		<p class="mt-4">No posts.</p>
-	</div>
+	<ImagePlaceholder imgHeight={'40'} class="mt-8" />
+	<ImagePlaceholder imgHeight={'40'} class="mt-8" />
+	<ImagePlaceholder imgHeight={'40'} class="mt-8" />
 {:else}{/if}
 
 <style>
