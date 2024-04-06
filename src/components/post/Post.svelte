@@ -32,7 +32,7 @@
 		<ul>
 			{#each post.comments as comment}
 				<li class="bg-gray-100 p-3 mb-4 rounded-lg flex flex-col">
-					<div class="text-sm mb-1 text-primary">{comment.author.name}</div>
+					<div class="text-sm mb-1 text-gray-500">{comment.author.name}</div>
 					<div>{@html comment.content}</div>
 				</li>
 			{/each}
