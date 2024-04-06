@@ -25,7 +25,7 @@
 		for (let post of posts) {
 			if (post.discussion.comment_count > 0) {
 				const comments = await fetchComment(post.ID, howManyComments);
-				post.comments = comments;
+				post.comments = comments || [];
 				post = { ...post };
 				posts = [...posts];
 			}
