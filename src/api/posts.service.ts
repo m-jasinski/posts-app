@@ -16,7 +16,7 @@ export async function fetchPosts(length: number): Promise<PostDTO[]> {
 
 export async function fetchComment(id: number, howMany: number = 1): Promise<Comment[]> {
 	const response = await fetch(
-		`https://public-api.wordpress.com/rest/v1/sites/${id}/comments?number=${howMany}`
+		`https://public-api.wordpress.com/rest/v1.1/sites/en.blog.wordpress.com/posts/${id}/replies?number=${howMany}`
 	);
 	const data = await response.json();
 	return data.comments;
