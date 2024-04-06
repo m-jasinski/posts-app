@@ -15,7 +15,6 @@ a:hover {
 }
 
 input[type='range'] {
-	@apply text-accent;
 	--thumb-height: 1.125em;
 	--track-height: 0.25em;
 	--track-color: #fff;
@@ -29,6 +28,10 @@ input[type='range'] {
 	position: relative;
 	background: #fff0;
 	overflow: hidden;
+}
+
+input[type='range']:active {
+	cursor: grabbing;
 }
 
 /* === WebKit specific styles === */
@@ -52,10 +55,8 @@ input[type='range']::-webkit-slider-thumb {
 	--clip-further: calc(100% + 1px);
 	--box-fill: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0 100vmax currentColor;
 
+	@apply bg-accent;
 	width: var(--thumb-width, var(--thumb-height));
-	background: linear-gradient(currentColor 0 0) scroll no-repeat left center / 50%
-		calc(var(--track-height) + 1px);
-	background-color: currentColor;
 	box-shadow: var(--box-fill);
 	border-radius: var(--thumb-width, var(--thumb-height));
 
@@ -93,7 +94,7 @@ input[type='range']::-moz-range-progress {
 }
 
 input[type='range']::-moz-range-thumb {
-	background: currentColor;
+	@apply bg-accent;
 	border: 0;
 	width: var(--thumb-width, var(--thumb-height));
 	border-radius: var(--thumb-width, var(--thumb-height));
@@ -124,4 +125,14 @@ input[type='range']::-moz-range-progress {
 input[type='range']::-moz-range-thumb,
 input[type='range']::-moz-range-progress {
 	filter: brightness(100%);
+}
+
+input[type='range']:active::-webkit-slider-thumb {
+	filter: brightness(var(--brightness-down));
+	cursor: grabbing;
+}
+
+input[type='range']:active::-moz-range-thumb,
+input[type='range']:active::-moz-range-progress {
+	filter: brightness(var(--brightness-down));
 }

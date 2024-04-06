@@ -20,11 +20,12 @@
 		<input
 			id="post-length"
 			type="range"
-			value={postVal}
+			bind:value={postVal}
 			min="1"
 			max="20"
 			on:change={(value) => updateData(value)}
+			class="bg-white"
 		/>
-		<p>{howManyPosts} {howManyPosts > 1 ? 'posts' : 'post'}</p>
+		<p>{postVal} {postVal > 1 ? 'posts' : 'post'}</p>
 	</fieldset>
 </form>
