@@ -6,7 +6,7 @@
 
 <div class="flex flex-col md:flex-row w-full">
 	<img
-		class="w-40 h-40 object-cover hidden md:block"
+		class="w-40 h-40 object-cover hidden md:block rounded-md"
 		src={post.post_thumbnail.URL}
 		alt={post.title}
 		loading="lazy"
@@ -14,7 +14,7 @@
 	<div class="md:ml-4 flex flex-col justify-between">
 		<div>
 			<a href={post.URL} target="_blank" rel="nofollow" title={post.title}
-				><h2 class="text-xl font-bold">{@html post.title}</h2></a
+				><h2 class="linked-header text-xl font-bold">{@html post.title}</h2></a
 			>
 			<div>{@html post.excerpt}</div>
 		</div>
@@ -32,7 +32,7 @@
 		<ul>
 			{#each post.comments as comment}
 				<li class="bg-gray-100 p-3 mb-4 rounded-lg flex flex-col">
-					<div class="text-gray-800 text-sm mb-1">{comment.author.name}</div>
+					<div class="text-sm mb-1 text-primary">{comment.author.name}</div>
 					<div>{@html comment.content}</div>
 				</li>
 			{/each}

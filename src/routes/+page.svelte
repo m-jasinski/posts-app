@@ -5,7 +5,7 @@
 	let howManyPostsProp = 3;
 </script>
 
-<div class="bg-primary">
+<div class="bg-primary sticky top-0">
 	<div class="container mx-auto px-4">
 		<PostsInput bind:howManyPosts={howManyPostsProp} />
 	</div>

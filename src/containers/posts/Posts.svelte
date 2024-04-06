@@ -47,11 +47,11 @@
 
 {#if posts.length > 0}
 	<button
-		class="bg-accent text-black hover:text-white hover:bg-slate-800 my-5 px-3 py-2 mx-auto"
+		class="bg-accent text-black hover:text-white hover:bg-slate-800 my-5 px-3 py-2 mx-auto rounded-md"
 		disabled={!isFetchBtnEnabled}
-		on:click={() => fetchComents()}>Fetch Comments</button
+		on:click={() => fetchComents()}>Fetch All Comments</button
 	>
-	<h1 class="text-2xl mb-6">Posts:</h1>
+	<h1 class="text-2xl mb-6 text-primary">Posts:</h1>
 	<ul class="posts-list">
 		{#each posts as post (post.ID)}
 			<li class="post mb-8 pb-8 border-gray-100 border-b-2"><Post {post} /></li>
