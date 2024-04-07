@@ -1,41 +1,79 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Post from '../../components/post/Post.svelte';
-	import type { PostDTO } from '../../api/dto/Posts.dto';
+	import Button from '../../components/button/Button.svelte';
 	import { fetchComment, fetchPosts } from '../../api/posts.service';
 	import { ImagePlaceholder } from 'flowbite-svelte';
-	import { onMount } from 'svelte';
+	import type { PostDTO, Comment } from '../../api/dto/Posts.dto';
 
 	export let howManyPosts: number;
-
 	let posts: PostDTO[] = [];
-	let isFetchBtnEnabled = true;
+	let isFetchBtnEnabled = false;
 	let howManyComments = 1;
 	let initialFlag = false;
+	let isLoadingPosts = true;
+	let isRequestSuccesfull: boolean | null = null;
+	let commentsMap = new Map<number, boolean>();
+	let canceledRequest = false;
 
 	async function fetchData(length: number): Promise<void> {
+		canceledRequest = true;
 		if (length === 0) {
 			posts = [];
 			return;
 		}
-		const response = await fetchPosts(length);
-		posts = response ? response : [];
-		isFetchBtnEnabled = true;
+		try {
+			isLoadingPosts = true;
+			clearCommentsMap();
+			const response = await fetchPosts(length);
+			posts = response ? response : [];
+
+			isRequestSuccesfull = true;
+			isLoadingPosts = false;
+			isFetchBtnEnabled = true;
+		} catch (e) {
+			posts = [];
+			isLoadingPosts = false;
+			isRequestSuccesfull = false;
+		}
+	}
+
+	function updatePost(currentPost: PostDTO, comments: Comment[]): PostDTO {
+		currentPost.comments = comments;
+		return { ...currentPost, comments };
 	}
 
 	async function fetchComents(): Promise<void> {
+		canceledRequest = false;
 		isFetchBtnEnabled = false;
+
 		for (let post of posts) {
-			if (post.discussion.comment_count > 0) {
-				const comments = await fetchComment(post.ID, howManyComments);
-				post.comments = comments || [];
-				post = { ...post };
-				posts = [...posts];
-			} else {
-				post.comments = [];
-				post = { ...post };
+			commentsMap.set(post.ID, true);
+
+			try {
+				if (post.discussion.comment_count > 0) {
+					const comments: Comment[] = await fetchComment(post.ID, howManyComments);
+					post = updatePost(post, comments);
+					posts = [...posts];
+				} else {
+					post = updatePost(post, []);
+					posts = [...posts];
+				}
+			} catch (e) {
+				post = updatePost(post, []);
 				posts = [...posts];
 			}
+			commentsMap.set(post.ID, false);
+
+			if (canceledRequest) {
+				canceledRequest = false;
+				break;
+			}
 		}
+	}
+
+	function clearCommentsMap(): void {
+		commentsMap.clear();
 	}
 
 	$: {
@@ -52,28 +90,22 @@
 </script>
 
 {#if posts.length > 0}
-	<button
-		class="bg-accent text-black hover:text-white hover:bg-slate-800 my-5 px-3 py-2 mx-auto rounded-md"
-		disabled={!isFetchBtnEnabled}
-		on:click={() => fetchComents()}>Fetch All Comments</button
-	>
+	<Button caption="Fetch All Comments" {isFetchBtnEnabled} on:click={() => fetchComents()}></Button>
 	<h1 class="text-2xl mb-6">Posts:</h1>
 	<ul class="posts-list">
 		{#each posts as post (post.ID)}
-			<li class="post mb-8 pb-8 border-gray-100 border-b-2"><Post {post} /></li>
+			<Post {post} isLoading={!!commentsMap.get(post.ID)} />
 		{/each}
 	</ul>
-{:else if posts.length === 0}
+{:else if isLoadingPosts}
 	<ImagePlaceholder imgHeight={'40'} class="mt-8" />
 	<ImagePlaceholder imgHeight={'40'} class="mt-8" />
 	<ImagePlaceholder imgHeight={'40'} class="mt-8" />
+{:else if !isLoadingPosts && !isRequestSuccesfull}
+	<div class="mt-5 text-xl">Cannot get posts</div>
 {:else}{/if}
 
 <style>
-	button:disabled {
-		@apply bg-slate-200 text-black;
-		cursor: not-allowed;
-	}
 	.post:last-child {
 		border: none;
 	}
