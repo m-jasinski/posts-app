@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
+	import { onMount } from 'svelte';
 	import Post from '../../components/post/Post.svelte';
 	import Button from '../../components/button/Button.svelte';
 	import { fetchComment, fetchPosts } from '../../api/posts.service';
 	import { ImagePlaceholder } from 'flowbite-svelte';
 	import type { PostDTO, Comment } from '../../api/dto/Posts.dto';
-	import { setLoading } from '../../store/LoadingStore';
+	import { setLoading, loadingStore } from '../../store/LoadingStore';
 
 	export let howManyPosts: number;
 	let posts: PostDTO[] = [];
@@ -17,6 +17,7 @@
 	let canceledRequest = false;
 
 	async function fetchData(length: number): Promise<void> {
+		loadingStore.set({});
 		canceledRequest = true;
 		if (length === 0) {
 			posts = [];
