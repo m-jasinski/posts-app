@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import Post from '../../components/post/Post.svelte';
 	import Button from '../../components/button/Button.svelte';
 	import { fetchComment, fetchPosts } from '../../api/posts.service';
 	import { ImagePlaceholder } from 'flowbite-svelte';
 	import type { PostDTO, Comment } from '../../api/dto/Posts.dto';
+	import { setLoading } from '../../store/LoadingStore';
 
 	export let howManyPosts: number;
 	let posts: PostDTO[] = [];
@@ -13,7 +14,6 @@
 	let initialFlag = false;
 	let isLoadingPosts = true;
 	let isRequestSuccesfull: boolean | null = null;
-	let commentsMap = new Map<number, boolean>();
 	let canceledRequest = false;
 
 	async function fetchData(length: number): Promise<void> {
@@ -24,10 +24,8 @@
 		}
 		try {
 			isLoadingPosts = true;
-			clearCommentsMap();
 			const response = await fetchPosts(length);
 			posts = response ? response : [];
-
 			isRequestSuccesfull = true;
 			isLoadingPosts = false;
 			isFetchBtnEnabled = true;
@@ -48,7 +46,7 @@
 		isFetchBtnEnabled = false;
 
 		for (let post of posts) {
-			commentsMap.set(post.ID, true);
+			setLoading(post.ID, true);
 
 			try {
 				if (post.discussion.comment_count > 0) {
@@ -63,17 +61,13 @@
 				post = updatePost(post, []);
 				posts = [...posts];
 			}
-			commentsMap.set(post.ID, false);
+			setLoading(post.ID, false);
 
 			if (canceledRequest) {
 				canceledRequest = false;
 				break;
 			}
 		}
-	}
-
-	function clearCommentsMap(): void {
-		commentsMap.clear();
 	}
 
 	$: {
@@ -94,7 +88,7 @@
 	<h1 class="text-2xl mb-6">Posts:</h1>
 	<ul class="posts-list">
 		{#each posts as post (post.ID)}
-			<Post {post} isLoading={!!commentsMap.get(post.ID)} />
+			<Post {post} />
 		{/each}
 	</ul>
 {:else if isLoadingPosts}

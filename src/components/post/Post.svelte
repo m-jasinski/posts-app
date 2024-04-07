@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { Skeleton } from 'flowbite-svelte';
 	import type { PostDTO } from '../../api/dto/Posts.dto';
+	import { loadingStore } from '../../store/LoadingStore';
 
 	export let post: PostDTO;
-	export let isLoading: boolean;
+	let isLoading: boolean = false;
+
+	$: isLoading = $loadingStore[post.ID] || false;
 </script>
 
 <li class="post mb-8 pb-8 border-gray-100 border-b-2">
