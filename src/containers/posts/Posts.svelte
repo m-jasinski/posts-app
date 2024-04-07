@@ -103,10 +103,4 @@
 	<ImagePlaceholder imgHeight={'40'} class="mt-8" />
 {:else if !isLoadingPosts && !isRequestSuccesfull}
 	<div class="mt-5 text-xl">Cannot get posts</div>
-{:else}{/if}
-
-<style>
-	.post:last-child {
-		border: none;
-	}
-</style>
+{/if}
