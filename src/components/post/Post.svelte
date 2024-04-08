@@ -1,12 +1,20 @@
 <script lang="ts">
 	import { Skeleton } from 'flowbite-svelte';
-	import type { PostDTO } from '../../api/dto/Posts.dto';
+	import type { PostDTO, Comment } from '../../api/dto/Posts.dto';
 	import { loadingStore } from '../../store/LoadingStore';
+	import { commentsStore } from '../../store/CommentsStore';
 
 	export let post: PostDTO;
-	let isLoading: boolean = false;
+	let comments: Comment[] | undefined = undefined;
+	let isCommentsLoaded = false;
 
 	$: isLoading = $loadingStore[post.ID] || false;
+	$: if ($commentsStore[post.ID] !== undefined) {
+		comments = $commentsStore[post.ID];
+		isCommentsLoaded = true;
+	} else {
+		isCommentsLoaded = false;
+	}
 </script>
 
 <li class="post mb-8 pb-8 border-gray-100 border-b-2">
@@ -37,11 +45,11 @@
 			</div>
 		</div>
 	</div>
-	{#if post?.comments && !isLoading}
-		{#if post?.comments.length > 0}
+	{#if isCommentsLoaded && !isLoading}
+		{#if comments && comments.length > 0}
 			<h3 class="mt-8 mb-3 text-lg">Comments:</h3>
 			<ul>
-				{#each post.comments as comment}
+				{#each comments as comment}
 					<li class="bg-gray-100 p-3 mb-4 rounded-lg flex flex-col">
 						<div class="text-sm mb-1 text-gray-500">{comment.author.name}</div>
 						<div>{@html comment.content}</div>

@@ -6,6 +6,7 @@
 	import { ImagePlaceholder } from 'flowbite-svelte';
 	import type { PostDTO, Comment } from '../../api/dto/Posts.dto';
 	import { setLoading, loadingStore } from '../../store/LoadingStore';
+	import { setComments, commentsStore } from '../../store/CommentsStore';
 
 	export let howManyPosts: number;
 	let posts: PostDTO[] = [];
@@ -16,8 +17,17 @@
 	let isRequestSuccesfull: boolean | null = null;
 	let canceledRequest = false;
 
+	$: {
+		if (!initialFlag) {
+			initialFlag = true;
+		} else {
+			fetchData(howManyPosts);
+		}
+	}
+
 	async function fetchData(length: number): Promise<void> {
 		loadingStore.set({});
+		commentsStore.set({});
 		canceledRequest = true;
 		if (length === 0) {
 			posts = [];
@@ -37,11 +47,6 @@
 		}
 	}
 
-	function updatePost(currentPost: PostDTO, comments: Comment[]): PostDTO {
-		currentPost.comments = comments;
-		return { ...currentPost, comments };
-	}
-
 	async function fetchComents(): Promise<void> {
 		canceledRequest = false;
 		isFetchBtnEnabled = false;
@@ -52,15 +57,12 @@
 			try {
 				if (post.discussion.comment_count > 0) {
 					const comments: Comment[] = await fetchComment(post.ID, howManyComments);
-					post = updatePost(post, comments);
-					posts = [...posts];
+					setComments(post.ID, comments);
 				} else {
-					post = updatePost(post, []);
-					posts = [...posts];
+					setComments(post.ID, []);
 				}
 			} catch (e) {
-				post = updatePost(post, []);
-				posts = [...posts];
+				setComments(post.ID, []);
 			}
 			setLoading(post.ID, false);
 
@@ -68,14 +70,6 @@
 				canceledRequest = false;
 				break;
 			}
-		}
-	}
-
-	$: {
-		if (!initialFlag) {
-			initialFlag = true;
-		} else {
-			fetchData(howManyPosts);
 		}
 	}
 
